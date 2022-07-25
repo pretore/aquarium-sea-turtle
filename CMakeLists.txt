@@ -1,0 +1,109 @@
+cmake_minimum_required(VERSION 3.22)
+project(aquarium-sea-turtle VERSION 1.0.0
+        LANGUAGES C
+        DESCRIPTION "Data types in C")
+
+set(CMAKE_C_STANDARD 11)
+# Dependencies
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+find_package(Doxygen OPTIONAL_COMPONENTS dot mscgen dia)
+find_library(gmp gmp)
+if(NOT gmp)
+    message(FATAL_ERROR "gmp [https://gmplib.org/] not found")
+endif()
+include(cmake/FetchAquariumSeagrass.cmake)
+
+# Sources
+set(EXPORTED_HEADER_FILES
+        include/sea-turtle/error.h
+        include/sea-turtle/integer.h
+        include/sea-turtle.h)
+set(SOURCES
+        ${EXPORTED_HEADER_FILES}
+        src/error.c
+        src/integer.c
+        src/sea-turtle.c)
+
+if (DOXYGEN_FOUND)
+    set(DOXYGEN_EXTRACT_ALL YES)
+    doxygen_add_docs(${PROJECT_NAME}-documentation
+            ${EXPORTED_HEADER_FILES})
+endif ()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    include(cmake/FetchCMocka.cmake)
+    add_library(${PROJECT_NAME} STATIC "")
+    add_compile_definitions(TEST)
+    target_sources(${PROJECT_NAME}
+            PRIVATE
+                ${SOURCES}
+                src/test/cmocka.h
+                src/test/wrap.c
+                src/test/wrap.h)
+    target_link_libraries(${PROJECT_NAME}
+            PUBLIC
+                ${CMAKE_THREAD_LIBS_INIT}
+                ${CMOCKA_SHARED_LIBRARY}
+                gmp
+                aquarium-seagrass)
+    target_include_directories(${PROJECT_NAME}
+            PUBLIC
+                "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+                "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
+    set(LINK_FLAGS "-Wl,--wrap=seagrass_required_true")
+    # Unit Tests
+    enable_testing()
+    # aquarium-sea-turtle-unit-test
+    add_executable(${PROJECT_NAME}-unit-test test/test_sea-turtle.c)
+    target_include_directories(${PROJECT_NAME}-unit-test
+            PRIVATE
+                "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
+    target_link_libraries(${PROJECT_NAME}-unit-test
+            PRIVATE
+                ${PROJECT_NAME})
+    set_target_properties(${PROJECT_NAME}-unit-test
+            PROPERTIES
+                LINK_FLAGS ${LINK_FLAGS})
+    add_test(${PROJECT_NAME}-unit-test ${PROJECT_NAME}-unit-test)
+    # aquarium-sea-turtle-integer-unit-test
+    add_executable(${PROJECT_NAME}-integer-unit-test test/test_integer.c)
+    target_include_directories(${PROJECT_NAME}-integer-unit-test
+            PRIVATE
+                "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
+    target_link_libraries(${PROJECT_NAME}-integer-unit-test
+            PRIVATE
+                ${PROJECT_NAME})
+    set_target_properties(${PROJECT_NAME}-integer-unit-test
+            PROPERTIES
+                LINK_FLAGS ${LINK_FLAGS})
+    add_test(${PROJECT_NAME}-integer-unit-test
+            ${PROJECT_NAME}-integer-unit-test)
+else ()
+    add_library(${PROJECT_NAME} "")
+    target_sources(${PROJECT_NAME}
+            PRIVATE
+                ${SOURCES})
+    target_include_directories(${PROJECT_NAME}
+            PUBLIC
+                "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+                "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
+    target_link_libraries(${PROJECT_NAME}
+            PUBLIC
+                ${CMAKE_THREAD_LIBS_INIT}
+                gmp
+                aquarium-seagrass)
+    set_target_properties(${PROJECT_NAME}
+            PROPERTIES
+                VERSION ${PROJECT_VERSION}
+                SOVERSION ${PROJECT_VERSION_MAJOR})
+    include(GNUInstallDirs)
+    install(DIRECTORY include/
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(TARGETS ${PROJECT_NAME}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc @ONLY)
+    install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+endif ()
