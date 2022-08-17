@@ -133,6 +133,81 @@ static void check_init(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
+static void check_set_with_char_ptr_error_on_object_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_set_with_char_ptr(NULL, (void *)1));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_with_char_ptr_error_on_char_ptr_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_set_with_char_ptr((void *)1, NULL));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_NULL,
+                     sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void
+check_set_with_char_ptr_error_on_char_ptr_is_malformed(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer object = {};
+    assert_true(sea_turtle_integer_init(&object));
+    assert_false(sea_turtle_integer_set_with_char_ptr(
+            &object, "28761236187720391aa"));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED,
+                     sea_turtle_error);
+    assert_true(sea_turtle_integer_invalidate(&object));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_with_char_ptr(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer object = {};
+    assert_true(sea_turtle_integer_init(&object));
+    assert_true(sea_turtle_integer_set_with_char_ptr(
+            &object,
+            "826221238914710294871294812617285631892198412643162192184281736249"
+            "634961294639146710643197329057023197493217781236481246031640871753"
+            "298171906431023762174693164013471937498357293653296589726387162386"
+            "128736781263012746398610461309483691386490123649817259873297592837"
+            "932657821568732123423425427617843198352371433532824595485248132"));
+    assert_true(sea_turtle_integer_invalidate(&object));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_with_size_t_error_on_object_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_set_with_size_t(NULL, 0));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_with_size_t(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer object = {};
+    assert_true(sea_turtle_integer_init(&object));
+    assert_true(sea_turtle_integer_set_with_size_t(&object, 8972));
+    assert_true(sea_turtle_integer_invalidate(&object));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_with_ssize_t_error_on_object_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_set_with_ssize_t(NULL, 2134));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_with_ssize_t(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer object = {};
+    assert_true(sea_turtle_integer_init(&object));
+    assert_true(sea_turtle_integer_set_with_ssize_t(&object, -2321));
+    assert_true(sea_turtle_integer_invalidate(&object));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
 static void check_add_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     assert_false(sea_turtle_integer_add(NULL, (void *)1));
@@ -697,6 +772,14 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_init_with_integer),
             cmocka_unit_test(check_init_error_on_object_is_null),
             cmocka_unit_test(check_init),
+            cmocka_unit_test(check_set_with_char_ptr_error_on_object_is_null),
+            cmocka_unit_test(check_set_with_char_ptr_error_on_char_ptr_is_null),
+            cmocka_unit_test(check_set_with_char_ptr_error_on_char_ptr_is_malformed),
+            cmocka_unit_test(check_set_with_char_ptr),
+            cmocka_unit_test(check_set_with_size_t_error_on_object_is_null),
+            cmocka_unit_test(check_set_with_size_t),
+            cmocka_unit_test(check_set_with_ssize_t_error_on_object_is_null),
+            cmocka_unit_test(check_set_with_ssize_t),
             cmocka_unit_test(check_add_error_on_object_is_null),
             cmocka_unit_test(check_add_error_on_other_is_null),
             cmocka_unit_test(check_add),

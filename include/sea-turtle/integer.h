@@ -97,6 +97,47 @@ bool sea_turtle_integer_init(struct sea_turtle_integer *object);
 bool sea_turtle_integer_invalidate(struct sea_turtle_integer *object);
 
 /**
+ * @brief Set the integer from char pointer.
+ * <p>The char pointer's contents must be in one of the following formats:
+ * <ul>
+ * <li>hexadecimal number starts with <b>0x</b></li>
+ * <li>binary number starts with <b>0b</b></li>
+ * <li>octal number starts with <b>0</b></li>
+ * <li>decimal otherwise</li>
+ * </ul>
+ * </p>
+ * @param [in] object instance to be set.
+ * @param [in] char_ptr number in one of the supported formats.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ * @throws SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_NULL if char_ptr is <i>NULL</i>.
+ * @throws SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED if char_ptr is not in
+ * one of the recognised formats.
+ */
+bool sea_turtle_integer_set_with_char_ptr(struct sea_turtle_integer *object,
+                                          const char *char_ptr);
+
+/**
+ * @brief Set the integer from size_t.
+ * @param [in] object instance to be set.
+ * @param [in] value number that the integer should be set to.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ */
+bool sea_turtle_integer_set_with_size_t(struct sea_turtle_integer *object,
+                                        size_t value);
+
+/**
+ * @brief Set the integer from ssize_t.
+ * @param [in] object instance to be set.
+ * @param [in] value number that the integer should be set to.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ */
+bool sea_turtle_integer_set_with_ssize_t(struct sea_turtle_integer *object,
+                                         ssize_t value);
+
+/**
  * @brief Add two integers together.
  * @param [in,out] object add other to this integer.
  * @param [in] other integer instance.

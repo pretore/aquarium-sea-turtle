@@ -3,16 +3,16 @@
 #include <sea-turtle.h>
 
 bool sea_turtle_integer_init_with_char_ptr(struct sea_turtle_integer *object,
-                                           const char *string) {
+                                           const char *char_ptr) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
     }
-    if (!string) {
+    if (!char_ptr) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_NULL;
         return false;
     }
-    if (mpz_init_set_str(object->mpz, string, 0)) {
+    if (mpz_init_set_str(object->mpz, char_ptr, 0)) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED;
         return false;
     }
@@ -71,6 +71,43 @@ bool sea_turtle_integer_invalidate(struct sea_turtle_integer *object) {
     }
     mpz_clear(object->mpz);
     (*object) = (struct sea_turtle_integer) {0};
+    return true;
+}
+
+bool sea_turtle_integer_set_with_char_ptr(struct sea_turtle_integer *object,
+                                          const char *char_ptr) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    if (!char_ptr) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_NULL;
+        return false;
+    }
+    if (mpz_set_str(object->mpz, char_ptr, 0)) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED;
+        return false;
+    }
+    return true;
+}
+
+bool sea_turtle_integer_set_with_size_t(struct sea_turtle_integer *object,
+                                        const size_t value) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    mpz_set_ui(object->mpz, value);
+    return true;
+}
+
+bool sea_turtle_integer_set_with_ssize_t(struct sea_turtle_integer *object,
+                                         const ssize_t value) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    mpz_set_si(object->mpz, value);
     return true;
 }
 
