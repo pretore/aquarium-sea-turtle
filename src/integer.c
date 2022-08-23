@@ -203,7 +203,13 @@ int sea_turtle_integer_compare(struct sea_turtle_integer *object,
     if (!object) {
         return 1;
     }
-    return mpz_cmp(object->mpz, other->mpz);
+    int result = mpz_cmp(object->mpz, other->mpz);
+    if (result < 0) {
+        return (-1);
+    } else if (result > 0) {
+        return 1;
+    }
+    return 0;
 }
 
 bool sea_turtle_integer_and(struct sea_turtle_integer *object,
