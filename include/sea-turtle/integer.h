@@ -21,8 +21,8 @@ struct sea_turtle_integer {
 };
 
 struct sea_turtle_integer_range {
-    size_t first;
-    size_t last;
+    uintmax_t first;
+    uintmax_t last;
 };
 
 /**
@@ -47,24 +47,24 @@ bool sea_turtle_integer_init_with_char_ptr(struct sea_turtle_integer *object,
                                            const char *char_ptr);
 
 /**
- * @brief Initialise integer from size_t.
+ * @brief Initialise integer from uintmax_t.
  * @param [in] object instance to be initialised.
  * @param [in] value number that the integer should contain initially.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_init_with_size_t(struct sea_turtle_integer *object,
-                                         size_t value);
+bool sea_turtle_integer_init_with_uintmax_t(struct sea_turtle_integer *object,
+                                            uintptr_t value);
 
 /**
- * @brief Initialise integer from ssize_t.
+ * @brief Initialise integer from intmax_t.
  * @param [in] object instance to be initialised.
  * @param [in] value number that the integer should contain initially.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_init_with_ssize_t(struct sea_turtle_integer *object,
-                                          ssize_t value);
+bool sea_turtle_integer_init_with_intmax_t(struct sea_turtle_integer *object,
+                                           intmax_t value);
 
 /**
  * @brief Initialise integer from other integer.
@@ -118,24 +118,24 @@ bool sea_turtle_integer_set_with_char_ptr(struct sea_turtle_integer *object,
                                           const char *char_ptr);
 
 /**
- * @brief Set the integer from size_t.
+ * @brief Set the integer from uintmax_t.
  * @param [in] object instance to be set.
  * @param [in] value number that the integer should be set to.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_set_with_size_t(struct sea_turtle_integer *object,
-                                        size_t value);
+bool sea_turtle_integer_set_with_uintmax_t(struct sea_turtle_integer *object,
+                                           uintmax_t value);
 
 /**
- * @brief Set the integer from ssize_t.
+ * @brief Set the integer from intmax_t.
  * @param [in] object instance to be set.
  * @param [in] value number that the integer should be set to.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_set_with_ssize_t(struct sea_turtle_integer *object,
-                                         ssize_t value);
+bool sea_turtle_integer_set_with_intmax_t(struct sea_turtle_integer *object,
+                                         intmax_t value);
 
 /**
  * @brief Add two integers together.
@@ -262,7 +262,7 @@ bool sea_turtle_integer_xor(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
 bool sea_turtle_integer_shift_left(struct sea_turtle_integer *object,
-                                   size_t nbits);
+                                   uintmax_t nbits);
 
 /**
  * @brief Bitwise shift right the integer by given number of bits.
@@ -272,7 +272,7 @@ bool sea_turtle_integer_shift_left(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
 bool sea_turtle_integer_shift_right(struct sea_turtle_integer *object,
-                                    size_t nbits);
+                                    uintmax_t nbits);
 
 /**
  * @brief Return the number of bits used for the value of integer (ignoring
@@ -285,7 +285,7 @@ bool sea_turtle_integer_shift_right(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
  */
 bool sea_turtle_integer_length(struct sea_turtle_integer *object,
-                               size_t *out);
+                               uintmax_t *out);
 
 /**
  * @brief Return the number of 1 bits for the value of integer (ignoring
@@ -298,7 +298,7 @@ bool sea_turtle_integer_length(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
  */
 bool sea_turtle_integer_count(struct sea_turtle_integer *object,
-                              size_t *out);
+                              uintmax_t *out);
 
 /**
  * @brief Return the bit at the given index for the two's complement
@@ -313,7 +313,7 @@ bool sea_turtle_integer_count(struct sea_turtle_integer *object,
  * complement</a>
  */
 bool sea_turtle_integer_get(struct sea_turtle_integer *object,
-                            size_t at,
+                            uintmax_t at,
                             bool *out);
 
 /**
@@ -328,7 +328,7 @@ bool sea_turtle_integer_get(struct sea_turtle_integer *object,
  * complement</a>
  */
 bool sea_turtle_integer_set(struct sea_turtle_integer *object,
-                            size_t at,
+                            uintmax_t at,
                             bool value);
 
 /**
@@ -348,6 +348,6 @@ bool sea_turtle_integer_set(struct sea_turtle_integer *object,
 bool sea_turtle_integer_find(struct sea_turtle_integer *object,
                              struct sea_turtle_integer_range *values,
                              bool needle,
-                             size_t *out);
+                             uintmax_t *out);
 
 #endif /* _SEA_TURTLE_INTEGER_H_ */

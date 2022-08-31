@@ -5,6 +5,6 @@
 
 #define SEA_TURTLE_ERROR_NONE                                 0
 
-extern _Thread_local size_t sea_turtle_error;
+extern _Thread_local uintmax_t sea_turtle_error;
 
 #endif /* _SEA_TURTLE_ERROR_H_ */

@@ -19,8 +19,8 @@ bool sea_turtle_integer_init_with_char_ptr(struct sea_turtle_integer *object,
     return true;
 }
 
-bool sea_turtle_integer_init_with_size_t(struct sea_turtle_integer *object,
-                                         const size_t value) {
+bool sea_turtle_integer_init_with_uintmax_t(struct sea_turtle_integer *object,
+                                            const uintmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -29,8 +29,8 @@ bool sea_turtle_integer_init_with_size_t(struct sea_turtle_integer *object,
     return true;
 }
 
-bool sea_turtle_integer_init_with_ssize_t(struct sea_turtle_integer *object,
-                                          const ssize_t value) {
+bool sea_turtle_integer_init_with_intmax_t(struct sea_turtle_integer *object,
+                                           const intmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -91,8 +91,8 @@ bool sea_turtle_integer_set_with_char_ptr(struct sea_turtle_integer *object,
     return true;
 }
 
-bool sea_turtle_integer_set_with_size_t(struct sea_turtle_integer *object,
-                                        const size_t value) {
+bool sea_turtle_integer_set_with_uintmax_t(struct sea_turtle_integer *object,
+                                           const uintmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -101,8 +101,8 @@ bool sea_turtle_integer_set_with_size_t(struct sea_turtle_integer *object,
     return true;
 }
 
-bool sea_turtle_integer_set_with_ssize_t(struct sea_turtle_integer *object,
-                                         const ssize_t value) {
+bool sea_turtle_integer_set_with_intmax_t(struct sea_turtle_integer *object,
+                                          const intmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -264,7 +264,7 @@ bool sea_turtle_integer_xor(struct sea_turtle_integer *object,
 }
 
 bool sea_turtle_integer_shift_left(struct sea_turtle_integer *object,
-                                   const size_t nbits) {
+                                   const uintmax_t nbits) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -274,7 +274,7 @@ bool sea_turtle_integer_shift_left(struct sea_turtle_integer *object,
 }
 
 bool sea_turtle_integer_shift_right(struct sea_turtle_integer *object,
-                                    const size_t nbits) {
+                                    const uintmax_t nbits) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -284,7 +284,7 @@ bool sea_turtle_integer_shift_right(struct sea_turtle_integer *object,
 }
 
 bool sea_turtle_integer_length(struct sea_turtle_integer *object,
-                               size_t *out) {
+                               uintmax_t *out) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -298,7 +298,7 @@ bool sea_turtle_integer_length(struct sea_turtle_integer *object,
 }
 
 bool sea_turtle_integer_count(struct sea_turtle_integer *object,
-                              size_t *out) {
+                              uintmax_t *out) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -316,7 +316,7 @@ bool sea_turtle_integer_count(struct sea_turtle_integer *object,
 }
 
 bool sea_turtle_integer_get(struct sea_turtle_integer *object,
-                            const size_t at,
+                            const uintmax_t at,
                             bool *out) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
@@ -331,7 +331,7 @@ bool sea_turtle_integer_get(struct sea_turtle_integer *object,
 }
 
 bool sea_turtle_integer_set(struct sea_turtle_integer *object,
-                            const size_t at,
+                            const uintmax_t at,
                             const bool value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
@@ -348,7 +348,7 @@ bool sea_turtle_integer_set(struct sea_turtle_integer *object,
 bool sea_turtle_integer_find(struct sea_turtle_integer *object,
                              struct sea_turtle_integer_range *values,
                              bool needle,
-                             size_t *out) {
+                             uintmax_t *out) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -357,12 +357,12 @@ bool sea_turtle_integer_find(struct sea_turtle_integer *object,
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OUT_IS_NULL;
         return false;
     }
-    size_t length;
+    uintmax_t length;
     seagrass_required_true(sea_turtle_integer_length(object, &length));
-    size_t min = 0, max = length;
+    uintmax_t min = 0, max = length;
     if (values) {
-        seagrass_size_t_minimum(values->first, values->last, &min);
-        seagrass_size_t_maximum(values->first, values->last, &max);
+        seagrass_uintmax_t_minimum(values->first, values->last, &min);
+        seagrass_uintmax_t_maximum(values->first, values->last, &max);
     }
     if (needle) {
         *out = mpz_scan1(object->mpz, min);
