@@ -5,3 +5,4 @@
 Data types in C.
 
 - ``sea_turtle_integer`` - _arbitrary-precision integer_
+- ``sea_turtle_string`` - _utf-8 encoded string_

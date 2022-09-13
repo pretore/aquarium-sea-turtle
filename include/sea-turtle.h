@@ -7,5 +7,6 @@
 
 #include <sea-turtle/error.h>
 #include <sea-turtle/integer.h>
+#include <sea-turtle/string.h>
 
 #endif /* _SEA_TURTLE_SEA_TURTLE_H_ */

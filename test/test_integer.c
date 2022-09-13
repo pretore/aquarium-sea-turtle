@@ -383,9 +383,9 @@ static void check_negate(void **state) {
 
 static void check_compare(void **state) {
     seagrass_required_true_is_overridden = false;
-    struct sea_turtle_integer i = {};
+    struct sea_turtle_integer i;
     assert_true(sea_turtle_integer_init(&i));
-    struct sea_turtle_integer o = {};
+    struct sea_turtle_integer o;
     assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 1));
 
     assert_int_equal((-1), sea_turtle_integer_compare(&i, &o));

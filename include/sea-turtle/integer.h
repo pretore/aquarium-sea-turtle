@@ -4,7 +4,6 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <sys/types.h>
 #include <gmp.h>
 
 #define SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL                     1
@@ -26,7 +25,7 @@ struct sea_turtle_integer_range {
 };
 
 /**
- * @brief Initialise integer from char pointer.
+ * @brief Initialize integer from char pointer.
  * <p>The char pointer's contents must be in one of the following formats:
  * <ul>
  * <li>hexadecimal number starts with <b>0x</b></li>
@@ -35,7 +34,7 @@ struct sea_turtle_integer_range {
  * <li>decimal otherwise</li>
  * </ul>
  * </p>
- * @param [in] object instance to be initialised.
+ * @param [in] object instance to be initialized.
  * @param [in] char_ptr number in one of the supported formats.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
@@ -47,8 +46,8 @@ bool sea_turtle_integer_init_with_char_ptr(struct sea_turtle_integer *object,
                                            const char *char_ptr);
 
 /**
- * @brief Initialise integer from uintmax_t.
- * @param [in] object instance to be initialised.
+ * @brief Initialize integer from uintmax_t.
+ * @param [in] object instance to be initialized.
  * @param [in] value number that the integer should contain initially.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
@@ -57,8 +56,8 @@ bool sea_turtle_integer_init_with_uintmax_t(struct sea_turtle_integer *object,
                                             uintptr_t value);
 
 /**
- * @brief Initialise integer from intmax_t.
- * @param [in] object instance to be initialised.
+ * @brief Initialize integer from intmax_t.
+ * @param [in] object instance to be initialized.
  * @param [in] value number that the integer should contain initially.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
@@ -67,20 +66,20 @@ bool sea_turtle_integer_init_with_intmax_t(struct sea_turtle_integer *object,
                                            intmax_t value);
 
 /**
- * @brief Initialise integer from other integer.
- * @param [in] object instance to be initialised.
- * @param [in] other integer whose value we are to be set.
+ * @brief Initialize integer from other integer.
+ * @param [in] object instance to be initialized.
+ * @param [in] other integer whose value we will copy.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
 bool sea_turtle_integer_init_with_integer(
         struct sea_turtle_integer *restrict object,
-        struct sea_turtle_integer *restrict other);
+        const struct sea_turtle_integer *restrict other);
 
 /**
- * @brief Initialise integer.
- * @param [in] object instance to be initialised.
+ * @brief Initialize integer.
+ * @param [in] object instance to be initialized.
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
@@ -146,7 +145,7 @@ bool sea_turtle_integer_set_with_intmax_t(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
 bool sea_turtle_integer_add(struct sea_turtle_integer *object,
-                            struct sea_turtle_integer *other);
+                            const struct sea_turtle_integer *other);
 
 /**
  * @brief Subtract other integer from object.
@@ -157,7 +156,7 @@ bool sea_turtle_integer_add(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
 bool sea_turtle_integer_subtract(struct sea_turtle_integer *object,
-                                 struct sea_turtle_integer *other);
+                                 const struct sea_turtle_integer *other);
 
 /**
  * @brief Divide integer by divisor.
@@ -170,7 +169,7 @@ bool sea_turtle_integer_subtract(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_DIVISION_BY_ZERO if divisor is zero.
  */
 bool sea_turtle_integer_divide(struct sea_turtle_integer *object,
-                               struct sea_turtle_integer *divisor,
+                               const struct sea_turtle_integer *divisor,
                                struct sea_turtle_integer *remainder);
 
 /**
@@ -182,7 +181,7 @@ bool sea_turtle_integer_divide(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
 bool sea_turtle_integer_multiply(struct sea_turtle_integer *object,
-                                 struct sea_turtle_integer *other);
+                                 const struct sea_turtle_integer *other);
 
 /**
  * @brief Retrieve absolute value.
@@ -210,8 +209,8 @@ bool sea_turtle_integer_negate(struct sea_turtle_integer *object);
  * @note If <b>object</b> and <b>other</b> is <i>NULL</i> then abort(3) is
  * called.
  */
-int sea_turtle_integer_compare(struct sea_turtle_integer *object,
-                               struct sea_turtle_integer *other);
+int sea_turtle_integer_compare(const struct sea_turtle_integer *object,
+                               const struct sea_turtle_integer *other);
 
 /**
  * @brief Perform bitwise AND.
@@ -222,7 +221,7 @@ int sea_turtle_integer_compare(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
 bool sea_turtle_integer_and(struct sea_turtle_integer *object,
-                            struct sea_turtle_integer *other);
+                            const struct sea_turtle_integer *other);
 
 /**
  * @brief Perform bitwise OR.
@@ -233,7 +232,7 @@ bool sea_turtle_integer_and(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
 bool sea_turtle_integer_or(struct sea_turtle_integer *object,
-                           struct sea_turtle_integer *other);
+                           const struct sea_turtle_integer *other);
 
 /**
  * @brief Perform bitwise NOT.
@@ -252,7 +251,7 @@ bool sea_turtle_integer_not(struct sea_turtle_integer *object);
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
 bool sea_turtle_integer_xor(struct sea_turtle_integer *object,
-                            struct sea_turtle_integer *other);
+                            const struct sea_turtle_integer *other);
 
 /**
  * @brief Bitwise shift left the integer by given number of bits.
@@ -284,7 +283,7 @@ bool sea_turtle_integer_shift_right(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  * @throws SEA_TURTLE_INTEGER_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
  */
-bool sea_turtle_integer_length(struct sea_turtle_integer *object,
+bool sea_turtle_integer_length(const struct sea_turtle_integer *object,
                                uintmax_t *out);
 
 /**
@@ -297,7 +296,7 @@ bool sea_turtle_integer_length(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  * @throws SEA_TURTLE_INTEGER_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
  */
-bool sea_turtle_integer_count(struct sea_turtle_integer *object,
+bool sea_turtle_integer_count(const struct sea_turtle_integer *object,
                               uintmax_t *out);
 
 /**
@@ -312,7 +311,7 @@ bool sea_turtle_integer_count(struct sea_turtle_integer *object,
  * @see <a href=https://en.wikipedia.org/wiki/Two%27s_complement> two's
  * complement</a>
  */
-bool sea_turtle_integer_get(struct sea_turtle_integer *object,
+bool sea_turtle_integer_get(const struct sea_turtle_integer *object,
                             uintmax_t at,
                             bool *out);
 
@@ -345,8 +344,8 @@ bool sea_turtle_integer_set(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_NEEDLE_NOT_FOUND if needle was not found
  * in the integer.
  */
-bool sea_turtle_integer_find(struct sea_turtle_integer *object,
-                             struct sea_turtle_integer_range *values,
+bool sea_turtle_integer_find(const struct sea_turtle_integer *object,
+                             const struct sea_turtle_integer_range *values,
                              bool needle,
                              uintmax_t *out);
 
