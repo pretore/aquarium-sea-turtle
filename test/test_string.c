@@ -107,6 +107,22 @@ static void check_init_error_on_char_ptr_is_malformed(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
+static void check_init_error_on_memory_allocation_failed(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_string object;
+    size_t out;
+    const char chars[] = u8"hold my beer!🍺";
+    malloc_is_overridden = true;
+    assert_false(sea_turtle_string_init(&object,
+                                        chars,
+                                        sizeof(chars),
+                                        &out));
+    malloc_is_overridden = false;
+    assert_int_equal(SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED,
+                     sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
 static void check_init(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_string object;
@@ -538,6 +554,7 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_init_error_on_out_is_null),
             cmocka_unit_test(check_init_error_on_empty_char_sequence),
             cmocka_unit_test(check_init_error_on_char_ptr_is_malformed),
+            cmocka_unit_test(check_init_error_on_memory_allocation_failed),
             cmocka_unit_test(check_init),
             cmocka_unit_test(check_with_string_error_on_object_is_null),
             cmocka_unit_test(check_with_string_error_no_other_is_null),
