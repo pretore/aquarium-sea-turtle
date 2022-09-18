@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "test/cmocka.h"
-#include "test/wrap.h"
 
 int main(int argc, char *argv[]) {
     const struct CMUnitTest tests[] = {

@@ -5,18 +5,30 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
-extern void* _test_malloc(size_t size, const char* file, int line);
-#define malloc(size) _test_malloc(size, __FILE__, __LINE__)
+/* aquarium-seagrass */
+extern void *cmocka_test_malloc(size_t size, const char *file, int line);
+#define malloc(size) cmocka_test_malloc(size, __FILE__, __LINE__)
+extern bool malloc_is_overridden;
 
-extern void* _test_calloc(size_t nmemb, size_t size, const char* file, int line);
-#define calloc(nmemb, size) _test_calloc(nmemb, size, __FILE__, __LINE__)
+extern void *cmocka_test_calloc(size_t nmemb, size_t size, const char* file,
+                                int line);
+#define calloc(nmemb, size) cmocka_test_calloc(nmemb, size, __FILE__, __LINE__)
+extern bool calloc_is_overridden;
 
-extern void* _test_realloc(void* ptr, size_t size, const char* file, int line);
-#define realloc(ptr, size) _test_realloc(ptr, size, __FILE__, __LINE__)
+extern void *cmocka_test_realloc(void *ptr, size_t size, const char *file, int
+line);
+#define realloc(ptr, size) cmocka_test_realloc(ptr, size, __FILE__, __LINE__)
+extern bool realloc_is_overridden;
 
-extern void _test_free(void* ptr, const char* file, int line);
-#define free(ptr) _test_free(ptr, __FILE__, __LINE__)
+extern void cmocka_test_free(void *ptr, const char *file, int line);
+#define free(ptr) cmocka_test_free(ptr, __FILE__, __LINE__)
+
+extern void cmocka_test_abort(const char *file, int line);
+#define abort() cmocka_test_abort(__FILE__, __LINE__)
+extern bool abort_is_overridden;
+
 #endif //TEST
 
 #endif /* _SEA_TURTLE_TEST_CMOCKA_H_ */

@@ -1,18 +1,17 @@
 cmake_minimum_required(VERSION 3.22)
-project(aquarium-sea-turtle VERSION 2.1.0
+project(aquarium-sea-turtle VERSION 2.1.1
         LANGUAGES C
         DESCRIPTION "Data types in C")
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED True)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # Dependencies
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
+find_package(GMP REQUIRED)
 find_package(Doxygen OPTIONAL_COMPONENTS dot mscgen dia)
-find_library(gmp gmp)
-if(NOT gmp)
-    message(FATAL_ERROR "gmp [https://gmplib.org/] not found")
-endif()
 include(cmake/FetchAquariumSeagrass.cmake)
 
 # Sources
@@ -42,20 +41,17 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_sources(${PROJECT_NAME}
             PRIVATE
                 ${SOURCES}
-                src/test/cmocka.h
-                src/test/wrap.c
-                src/test/wrap.h)
+                src/test/cmocka.h)
     target_link_libraries(${PROJECT_NAME}
             PUBLIC
                 ${CMAKE_THREAD_LIBS_INIT}
                 ${CMOCKA_SHARED_LIBRARY}
-                gmp
+                GMP::GMP
                 aquarium-seagrass)
     target_include_directories(${PROJECT_NAME}
             PUBLIC
                 "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
                 "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
-    set(LINK_FLAGS "-Wl,--wrap=seagrass_required_true")
     # Unit Tests
     enable_testing()
     # aquarium-sea-turtle-unit-test
@@ -66,9 +62,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_link_libraries(${PROJECT_NAME}-unit-test
             PRIVATE
                 ${PROJECT_NAME})
-    set_target_properties(${PROJECT_NAME}-unit-test
-            PROPERTIES
-                LINK_FLAGS ${LINK_FLAGS})
     add_test(${PROJECT_NAME}-unit-test ${PROJECT_NAME}-unit-test)
     # aquarium-sea-turtle-integer-unit-test
     add_executable(${PROJECT_NAME}-integer-unit-test test/test_integer.c)
@@ -78,9 +71,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_link_libraries(${PROJECT_NAME}-integer-unit-test
             PRIVATE
                 ${PROJECT_NAME})
-    set_target_properties(${PROJECT_NAME}-integer-unit-test
-            PROPERTIES
-                LINK_FLAGS ${LINK_FLAGS})
     add_test(${PROJECT_NAME}-integer-unit-test
             ${PROJECT_NAME}-integer-unit-test)
     # aquarium-sea-turtle-string-unit-test
@@ -91,9 +81,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_link_libraries(${PROJECT_NAME}-string-unit-test
             PRIVATE
                 ${PROJECT_NAME})
-    set_target_properties(${PROJECT_NAME}-string-unit-test
-            PROPERTIES
-                LINK_FLAGS ${LINK_FLAGS})
     add_test(${PROJECT_NAME}-string-unit-test ${PROJECT_NAME}-string-unit-test)
 else ()
     add_library(${PROJECT_NAME} "")
@@ -107,7 +94,7 @@ else ()
     target_link_libraries(${PROJECT_NAME}
             PUBLIC
                 ${CMAKE_THREAD_LIBS_INIT}
-                gmp
+                GMP::GMP
                 aquarium-seagrass)
     set_target_properties(${PROJECT_NAME}
             PROPERTIES

@@ -6,7 +6,6 @@
 #include <sea-turtle.h>
 
 #include "test/cmocka.h"
-#include "test/wrap.h"
 
 static void check_invalidate_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
@@ -382,7 +381,6 @@ static void check_negate(void **state) {
 }
 
 static void check_compare(void **state) {
-    seagrass_required_true_is_overridden = false;
     struct sea_turtle_integer i;
     assert_true(sea_turtle_integer_init(&i));
     struct sea_turtle_integer o;
@@ -400,10 +398,10 @@ static void check_compare(void **state) {
     assert_true(sea_turtle_integer_invalidate(&o));
     assert_true(sea_turtle_integer_invalidate(&i));
 
-    seagrass_required_true_is_overridden = true;
-    expect_function_call(__wrap_seagrass_required_true);
+    abort_is_overridden = true;
+    expect_function_call(cmocka_test_abort);
     sea_turtle_integer_compare(NULL, NULL);
-    seagrass_required_true_is_overridden = false;
+    abort_is_overridden = false;
 }
 
 static void check_and_error_on_object_is_null(void **state) {
