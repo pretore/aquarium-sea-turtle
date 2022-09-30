@@ -31,6 +31,8 @@ struct sea_turtle_string {
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  * @throws SEA_TURTLE_STRING_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
+ * @throws SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED if there is
+ * insufficient memory to initialize the string instance.
  */
 bool sea_turtle_string_init_with_string(struct sea_turtle_string *object,
                                         const struct sea_turtle_string *other);
