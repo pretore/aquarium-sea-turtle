@@ -22,6 +22,7 @@ struct sea_turtle_string {
     uint8_t *data;
     size_t size;
     uintmax_t count;
+    uintmax_t hash;
 };
 
 /**
@@ -96,6 +97,17 @@ bool sea_turtle_string_count(const struct sea_turtle_string *object,
  */
 int sea_turtle_string_compare(const struct sea_turtle_string *object,
                               const struct sea_turtle_string *other);
+
+/**
+ * @brief Retrieve the hash code.
+ * @param [in] object string instance.
+ * @param [out] out receive the hash code.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ * @throws SEA_TURTLE_STRING_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
+ */
+bool sea_turtle_string_hash(const struct sea_turtle_string *object,
+                            uintmax_t *out);
 
 /**
  * @brief Retrieve the first UTF-8 encoded symbol.

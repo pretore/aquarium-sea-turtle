@@ -55,21 +55,20 @@ bool sea_turtle_string_init(struct sea_turtle_string *const object,
                                == sea_turtle_error);
         return false;
     }
-    if (!(*out)) {
+    if (!*out) {
         sea_turtle_error = SEA_TURTLE_STRING_ERROR_EMPTY_CHAR_SEQUENCE;
         return false;
     }
     uintmax_t alloc;
-    {
-        /* add 1 to accommodate the NULL termination char */
-        const bool result = seagrass_uintmax_t_add(1, *out, &alloc);
-        if (!result || alloc > SIZE_MAX) {
-            seagrass_required_true(
-                    SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                    == seagrass_error || result);
-            sea_turtle_error = SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
-            return false;
-        }
+    /* add 1 to accommodate the NULL termination char */
+    const bool result = seagrass_uintmax_t_add(1, *out, &alloc);
+    if (!result || alloc > SIZE_MAX) {
+        seagrass_required_true(
+                SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
+                == seagrass_error
+                || result);
+        sea_turtle_error = SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
+        return false;
     }
     if (!sea_turtle_string_set_size(object, alloc)) {
         seagrass_required_true(SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED
@@ -77,6 +76,17 @@ bool sea_turtle_string_init(struct sea_turtle_string *const object,
         return false;
     }
     memcpy(object->data, char_ptr, *out);
+    /* calculate hashcode */
+    const uint8_t *at;
+    seagrass_required_true(sea_turtle_string_first(object, &at));
+    do {
+        uint32_t code_point;
+        seagrass_required_true(sea_turtle_string_code_point(
+                object, at, &code_point));
+        object->hash = 31 * object->hash + code_point;
+    } while (sea_turtle_string_next(object, at, &at));
+    seagrass_required_true(SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
+                           == sea_turtle_error);
     return true;
 }
 
@@ -273,6 +283,23 @@ int sea_turtle_string_compare(const struct sea_turtle_string *const object,
         return 1;
     }
     return 0;
+}
+
+bool sea_turtle_string_hash(const struct sea_turtle_string *const object,
+                            uintmax_t *const out) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    if (!out) {
+        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
+        return false;
+    }
+    if (!object->hash) {
+
+    }
+    *out = object->hash;
+    return true;
 }
 
 bool sea_turtle_string_set_size(struct sea_turtle_string *const object,

@@ -212,6 +212,20 @@ int sea_turtle_integer_compare(const struct sea_turtle_integer *const object,
     return 0;
 }
 
+bool sea_turtle_integer_hash(const struct sea_turtle_integer *const object,
+                             uintmax_t *const out) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    if (!out) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OUT_IS_NULL;
+        return false;
+    }
+    *out = mpz_get_ui(object->mpz);
+    return true;
+}
+
 bool sea_turtle_integer_and(struct sea_turtle_integer *const object,
                             const struct sea_turtle_integer *const other) {
     if (!object) {

@@ -21,7 +21,7 @@
  * @throws SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED if char_ptr does not
  * refer to a valid UTF-8 sequence.
  */
-bool sea_turtle_string_is_utf8_sequence(const char* char_ptr,
+bool sea_turtle_string_is_utf8_sequence(const char *char_ptr,
                                         size_t size,
                                         size_t *out,
                                         uintmax_t *count);

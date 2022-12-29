@@ -164,6 +164,9 @@ static void check_with_string(void **state) {
     assert_true(sea_turtle_string_init_with_string(&object, &other));
     assert_ptr_not_equal(other.data, object.data);
     assert_memory_equal(other.data, object.data, other.size);
+    assert_int_equal(other.size, object.size);
+    assert_int_equal(other.count, object.count);
+    assert_int_equal(other.hash, object.hash);
     assert_true(sea_turtle_string_invalidate(&object));
     assert_true(sea_turtle_string_invalidate(&other));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
@@ -220,6 +223,17 @@ static void check_compare(void **state) {
     expect_function_call(cmocka_test_abort);
     sea_turtle_string_compare(NULL, NULL);
     abort_is_overridden = false;
+}
+
+static void check_hash(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_string object;
+    const char chars[] = u8"🦖 t-rex";
+    size_t out;
+    assert_true(sea_turtle_string_init(&object, chars, sizeof(chars), &out));
+    assert_int_not_equal(object.hash, 0);
+    assert_true(sea_turtle_string_invalidate(&object));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
 static void check_first_error_on_object_is_null(void **state) {
@@ -563,6 +577,7 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_count_error_on_out_is_null),
             cmocka_unit_test(check_count),
             cmocka_unit_test(check_compare),
+            cmocka_unit_test(check_hash),
             cmocka_unit_test(check_first_error_on_object_is_null),
             cmocka_unit_test(check_first_error_on_out_is_null),
             cmocka_unit_test(check_first),

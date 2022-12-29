@@ -3,6 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include <string.h>
+#include <time.h>
 #include <sea-turtle.h>
 
 #include "test/cmocka.h"
@@ -111,7 +112,7 @@ static void check_init_with_integer(void **state) {
     assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 98123));
     struct sea_turtle_integer o = {};
     assert_true(sea_turtle_integer_init_with_integer(&o, &i));
-    assert_int_equal(mpz_get_si(o.mpz), 98123);
+    assert_int_equal(mpz_get_ui(o.mpz), 98123);
     assert_true(sea_turtle_integer_invalidate(&o));
     assert_true(sea_turtle_integer_invalidate(&i));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
@@ -402,6 +403,19 @@ static void check_compare(void **state) {
     expect_function_call(cmocka_test_abort);
     sea_turtle_integer_compare(NULL, NULL);
     abort_is_overridden = false;
+}
+
+static void check_hash(void **state) {
+    srand(time(NULL));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer object;
+    assert_true(sea_turtle_integer_init_with_uintmax_t(
+            &object, (1 + rand()) % (UINTMAX_MAX - 1)));
+    uintmax_t code;
+    assert_true(sea_turtle_integer_hash(&object, &code));
+    assert_int_not_equal(code, 0);
+    assert_true(sea_turtle_integer_invalidate(&object));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
 static void check_and_error_on_object_is_null(void **state) {
@@ -796,6 +810,7 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_negate_error_on_object_is_null),
             cmocka_unit_test(check_negate),
             cmocka_unit_test(check_compare),
+            cmocka_unit_test(check_hash),
             cmocka_unit_test(check_and_error_on_object_is_null),
             cmocka_unit_test(check_and_error_on_other_is_null),
             cmocka_unit_test(check_and),

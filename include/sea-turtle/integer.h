@@ -134,7 +134,7 @@ bool sea_turtle_integer_set_with_uintmax_t(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
 bool sea_turtle_integer_set_with_intmax_t(struct sea_turtle_integer *object,
-                                         intmax_t value);
+                                          intmax_t value);
 
 /**
  * @brief Add two integers together.
@@ -211,6 +211,17 @@ bool sea_turtle_integer_negate(struct sea_turtle_integer *object);
  */
 int sea_turtle_integer_compare(const struct sea_turtle_integer *object,
                                const struct sea_turtle_integer *other);
+
+/**
+ * @brief Retrieve the hash code.
+ * @param [in] object integer instance.
+ * @param [out] out receive the hash code.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
+ */
+bool sea_turtle_integer_hash(const struct sea_turtle_integer *object,
+                             uintmax_t *out);
 
 /**
  * @brief Perform bitwise AND.
