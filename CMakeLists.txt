@@ -45,7 +45,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_link_libraries(${PROJECT_NAME}
             PUBLIC
                 ${CMAKE_THREAD_LIBS_INIT}
-                ${CMOCKA_SHARED_LIBRARY}
                 GMP::GMP
                 aquarium-cmocka
                 aquarium-seagrass)
