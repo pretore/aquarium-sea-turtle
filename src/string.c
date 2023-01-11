@@ -4,7 +4,10 @@
 #include <seagrass.h>
 
 #include "private/string.h"
-#include "test/cmocka.h"
+
+#ifdef TEST
+#include <test/cmocka.h>
+#endif
 
 bool sea_turtle_string_init_with_string(
         struct sea_turtle_string *const object,

@@ -6,7 +6,7 @@
 #include <time.h>
 #include <sea-turtle.h>
 
-#include "test/cmocka.h"
+#include <test/cmocka.h>
 
 static void check_invalidate_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;

@@ -2,6 +2,10 @@
 #include <seagrass.h>
 #include <sea-turtle.h>
 
+#ifdef TEST
+#include <test/cmocka.h>
+#endif
+
 bool sea_turtle_integer_init_with_char_ptr(
         struct sea_turtle_integer *const object, const char *const char_ptr) {
     if (!object) {
