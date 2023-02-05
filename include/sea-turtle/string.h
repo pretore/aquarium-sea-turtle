@@ -35,8 +35,8 @@ struct sea_turtle_string {
  * @throws SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED if there is
  * insufficient memory to initialize the string instance.
  */
-bool sea_turtle_string_init_with_string(struct sea_turtle_string *object,
-                                        const struct sea_turtle_string *other);
+bool sea_turtle_string_init_string(struct sea_turtle_string *object,
+                                   const struct sea_turtle_string *other);
 
 /**
  * @brief Initialize string with an UTF-8 sequence.

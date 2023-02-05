@@ -3,11 +3,14 @@
 #include <sea-turtle.h>
 
 #ifdef TEST
+
 #include <test/cmocka.h>
+
 #endif
 
-bool sea_turtle_integer_init_with_char_ptr(
-        struct sea_turtle_integer *const object, const char *const char_ptr) {
+bool sea_turtle_integer_init_char_ptr(
+        struct sea_turtle_integer *const object,
+        const char *const char_ptr) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -23,8 +26,9 @@ bool sea_turtle_integer_init_with_char_ptr(
     return true;
 }
 
-bool sea_turtle_integer_init_with_uintmax_t(
-        struct sea_turtle_integer *const object, const uintmax_t value) {
+bool sea_turtle_integer_init_uintmax_t(
+        struct sea_turtle_integer *const object,
+        const uintmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -33,8 +37,9 @@ bool sea_turtle_integer_init_with_uintmax_t(
     return true;
 }
 
-bool sea_turtle_integer_init_with_intmax_t(
-        struct sea_turtle_integer *const object, const intmax_t value) {
+bool sea_turtle_integer_init_intmax_t(
+        struct sea_turtle_integer *const object,
+        const intmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -43,9 +48,9 @@ bool sea_turtle_integer_init_with_intmax_t(
     return true;
 }
 
-bool sea_turtle_integer_init_with_integer(
-        struct sea_turtle_integer *restrict const object,
-        const struct sea_turtle_integer *restrict const other) {
+bool sea_turtle_integer_init_integer(
+        struct sea_turtle_integer *const object,
+        const struct sea_turtle_integer *const other) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -54,7 +59,6 @@ bool sea_turtle_integer_init_with_integer(
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL;
         return false;
     }
-    seagrass_required_true(object != other);
     mpz_init_set(object->mpz, other->mpz);
     return true;
 }
@@ -78,8 +82,9 @@ bool sea_turtle_integer_invalidate(struct sea_turtle_integer *const object) {
     return true;
 }
 
-bool sea_turtle_integer_set_with_char_ptr(
-        struct sea_turtle_integer *const object, const char *const char_ptr) {
+bool sea_turtle_integer_set_char_ptr(
+        struct sea_turtle_integer *const object,
+        const char *const char_ptr) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -95,8 +100,9 @@ bool sea_turtle_integer_set_with_char_ptr(
     return true;
 }
 
-bool sea_turtle_integer_set_with_uintmax_t(
-        struct sea_turtle_integer *const object, const uintmax_t value) {
+bool sea_turtle_integer_set_uintmax_t(
+        struct sea_turtle_integer *const object,
+        const uintmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -105,8 +111,9 @@ bool sea_turtle_integer_set_with_uintmax_t(
     return true;
 }
 
-bool sea_turtle_integer_set_with_intmax_t(
-        struct sea_turtle_integer *const object, const intmax_t value) {
+bool sea_turtle_integer_set_intmax_t(
+        struct sea_turtle_integer *const object,
+        const intmax_t value) {
     if (!object) {
         sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
         return false;
@@ -129,6 +136,17 @@ bool sea_turtle_integer_add(struct sea_turtle_integer *const object,
     return true;
 }
 
+bool sea_turtle_integer_add_uintmax_t(
+        struct sea_turtle_integer *const object,
+        const uintmax_t value) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    mpz_add_ui(object->mpz, object->mpz, value);
+    return true;
+}
+
 bool sea_turtle_integer_subtract(struct sea_turtle_integer *const object,
                                  const struct sea_turtle_integer *const other) {
     if (!object) {
@@ -140,6 +158,17 @@ bool sea_turtle_integer_subtract(struct sea_turtle_integer *const object,
         return false;
     }
     mpz_sub(object->mpz, object->mpz, other->mpz);
+    return true;
+}
+
+bool sea_turtle_integer_subtract_uintmax_t(
+        struct sea_turtle_integer *const object,
+        const uintmax_t value) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    mpz_sub_ui(object->mpz, object->mpz, value);
     return true;
 }
 

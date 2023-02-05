@@ -22,36 +22,36 @@ static void check_invalidate(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_char_ptr_error_on_object_is_null(void **state) {
+static void check_init_char_ptr_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_init_with_char_ptr(NULL, (void *)1));
+    assert_false(sea_turtle_integer_init_char_ptr(NULL, (void *)1));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_char_ptr_error_on_char_ptr_is_null(void **state) {
+static void check_init_char_ptr_error_on_char_ptr_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_init_with_char_ptr((void *)1, NULL));
+    assert_false(sea_turtle_integer_init_char_ptr((void *)1, NULL));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_NULL,
                      sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
 static void
-check_init_with_char_ptr_error_on_char_ptr_is_malformed(void **state) {
+check_init_char_ptr_error_on_char_ptr_is_malformed(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
-    assert_false(sea_turtle_integer_init_with_char_ptr(
+    assert_false(sea_turtle_integer_init_char_ptr(
             &object, "28761236187720391aa"));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED,
                      sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_char_ptr(void **state) {
+static void check_init_char_ptr(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
-    assert_true(sea_turtle_integer_init_with_char_ptr(
+    assert_true(sea_turtle_integer_init_char_ptr(
             &object,
             "826221238914710294871294812617285631892198412643162192184281736249"
             "634961294639146710643197329057023197493217781236481246031640871753"
@@ -62,56 +62,56 @@ static void check_init_with_char_ptr(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_uintmax_t_error_on_object_is_null(void **state) {
+static void check_init_uintmax_t_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_init_with_uintmax_t(NULL, 0));
+    assert_false(sea_turtle_integer_init_uintmax_t(NULL, 0));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_uintmax_t(void **state) {
+static void check_init_uintmax_t(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&object, 8972));
+    assert_true(sea_turtle_integer_init_uintmax_t(&object, 8972));
     assert_true(sea_turtle_integer_invalidate(&object));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_intmax_t_error_on_object_is_null(void **state) {
+static void check_init_intmax_t_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_init_with_intmax_t(NULL, 2134));
+    assert_false(sea_turtle_integer_init_intmax_t(NULL, 2134));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_intmax_t(void **state) {
+static void check_init_intmax_t(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
-    assert_true(sea_turtle_integer_init_with_intmax_t(&object, -2321));
+    assert_true(sea_turtle_integer_init_intmax_t(&object, -2321));
     assert_true(sea_turtle_integer_invalidate(&object));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_integer_error_on_object_is_null(void **state) {
+static void check_init_integer_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_init_with_integer(NULL, (void *)1));
+    assert_false(sea_turtle_integer_init_integer(NULL, (void *)1));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_integer_error_on_other_is_null(void **state) {
+static void check_init_integer_error_on_other_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_init_with_integer((void *)1, NULL));
+    assert_false(sea_turtle_integer_init_integer((void *)1, NULL));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_init_with_integer(void **state) {
+static void check_init_integer(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 98123));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 98123));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_integer(&o, &i));
+    assert_true(sea_turtle_integer_init_integer(&o, &i));
     assert_int_equal(mpz_get_ui(o.mpz), 98123);
     assert_true(sea_turtle_integer_invalidate(&o));
     assert_true(sea_turtle_integer_invalidate(&i));
@@ -133,27 +133,27 @@ static void check_init(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_set_with_char_ptr_error_on_object_is_null(void **state) {
+static void check_set_char_ptr_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_set_with_char_ptr(NULL, (void *)1));
+    assert_false(sea_turtle_integer_set_char_ptr(NULL, (void *)1));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_set_with_char_ptr_error_on_char_ptr_is_null(void **state) {
+static void check_set_char_ptr_error_on_char_ptr_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_set_with_char_ptr((void *)1, NULL));
+    assert_false(sea_turtle_integer_set_char_ptr((void *)1, NULL));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_NULL,
                      sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
 static void
-check_set_with_char_ptr_error_on_char_ptr_is_malformed(void **state) {
+check_set_char_ptr_error_on_char_ptr_is_malformed(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
     assert_true(sea_turtle_integer_init(&object));
-    assert_false(sea_turtle_integer_set_with_char_ptr(
+    assert_false(sea_turtle_integer_set_char_ptr(
             &object, "28761236187720391aa"));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED,
                      sea_turtle_error);
@@ -161,11 +161,11 @@ check_set_with_char_ptr_error_on_char_ptr_is_malformed(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_set_with_char_ptr(void **state) {
+static void check_set_char_ptr(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
     assert_true(sea_turtle_integer_init(&object));
-    assert_true(sea_turtle_integer_set_with_char_ptr(
+    assert_true(sea_turtle_integer_set_char_ptr(
             &object,
             "826221238914710294871294812617285631892198412643162192184281736249"
             "634961294639146710643197329057023197493217781236481246031640871753"
@@ -176,34 +176,34 @@ static void check_set_with_char_ptr(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_set_with_uintmax_t_error_on_object_is_null(void **state) {
+static void check_set_uintmax_t_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_set_with_uintmax_t(NULL, 0));
+    assert_false(sea_turtle_integer_set_uintmax_t(NULL, 0));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_set_with_uintmax_t(void **state) {
+static void check_set_uintmax_t(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
     assert_true(sea_turtle_integer_init(&object));
-    assert_true(sea_turtle_integer_set_with_uintmax_t(&object, 8972));
+    assert_true(sea_turtle_integer_set_uintmax_t(&object, 8972));
     assert_true(sea_turtle_integer_invalidate(&object));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_set_with_intmax_t_error_on_object_is_null(void **state) {
+static void check_set_intmax_t_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_integer_set_with_intmax_t(NULL, 2134));
+    assert_false(sea_turtle_integer_set_intmax_t(NULL, 2134));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_set_with_intmax_t(void **state) {
+static void check_set_intmax_t(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object = {};
     assert_true(sea_turtle_integer_init(&object));
-    assert_true(sea_turtle_integer_set_with_intmax_t(&object, -2321));
+    assert_true(sea_turtle_integer_set_intmax_t(&object, -2321));
     assert_true(sea_turtle_integer_invalidate(&object));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
@@ -225,12 +225,29 @@ static void check_add_error_on_other_is_null(void **state) {
 static void check_add(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 72163));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 72163));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 21786));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 21786));
     assert_true(sea_turtle_integer_add(&i, &o));
     assert_int_equal(mpz_get_si(i.mpz), 93949);
     assert_true(sea_turtle_integer_invalidate(&o));
+    assert_true(sea_turtle_integer_invalidate(&i));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_add_uintmax_t_error_on_object_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_add_uintmax_t(NULL, 72163));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_add_uintmax_t(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer i = {};
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 72163));
+    assert_true(sea_turtle_integer_add_uintmax_t(&i, 21786));
+    assert_int_equal(mpz_get_si(i.mpz), 93949);
     assert_true(sea_turtle_integer_invalidate(&i));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
@@ -252,12 +269,29 @@ static void check_subtract_error_on_other_is_null(void **state) {
 static void check_subtract(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 72163));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 72163));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 21786));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 21786));
     assert_true(sea_turtle_integer_subtract(&i, &o));
     assert_int_equal(mpz_get_si(i.mpz), 50377);
     assert_true(sea_turtle_integer_invalidate(&o));
+    assert_true(sea_turtle_integer_invalidate(&i));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_subtract_uintmax_t_error_on_object_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_subtract_uintmax_t(NULL, 21786));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_subtract_uintmax_t(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer i = {};
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 72163));
+    assert_true(sea_turtle_integer_subtract_uintmax_t(&i, 21786));
+    assert_int_equal(mpz_get_si(i.mpz), 50377);
     assert_true(sea_turtle_integer_invalidate(&i));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
@@ -280,9 +314,9 @@ static void check_divide_error_on_divisor_is_null(void **state) {
 static void check_divide_error_on_divide_by_zero(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1000));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1000));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 0));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 0));
     assert_false(sea_turtle_integer_divide(&i, &o, NULL));
     assert_int_equal(SEA_TURTLE_INTEGER_ERROR_DIVISION_BY_ZERO,
                      sea_turtle_error);
@@ -294,15 +328,15 @@ static void check_divide_error_on_divide_by_zero(void **state) {
 static void check_divide(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1000));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1000));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 4));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 4));
     assert_true(sea_turtle_integer_divide(&i, &o, NULL));
     assert_int_equal(mpz_get_si(i.mpz), 250);
     assert_true(sea_turtle_integer_invalidate(&o));
     assert_true(sea_turtle_integer_invalidate(&i));
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1000));
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 3));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1000));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 3));
     struct sea_turtle_integer p = {};
     assert_true(sea_turtle_integer_init(&p));
     assert_true(sea_turtle_integer_divide(&i, &o, &p));
@@ -331,9 +365,9 @@ static void check_multiply_error_on_other_is_null(void **state) {
 static void check_multiply(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 10));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 10));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_intmax_t(&o, -10));
+    assert_true(sea_turtle_integer_init_intmax_t(&o, -10));
     assert_true(sea_turtle_integer_multiply(&i, &o));
     assert_int_equal(mpz_get_si(i.mpz), -100);
     assert_true(sea_turtle_integer_invalidate(&o));
@@ -351,7 +385,7 @@ static void check_absolute_error_on_object_is_null(void **state) {
 static void check_absolute(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_intmax_t(&i, -1));
+    assert_true(sea_turtle_integer_init_intmax_t(&i, -1));
     assert_int_equal(mpz_get_si(i.mpz), -1);
     assert_true(sea_turtle_integer_absolute(&i));
     assert_int_equal(mpz_get_si(i.mpz), 1);
@@ -371,7 +405,7 @@ static void check_negate_error_on_object_is_null(void **state) {
 static void check_negate(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_intmax_t(&i, -1));
+    assert_true(sea_turtle_integer_init_intmax_t(&i, -1));
     assert_int_equal(mpz_get_si(i.mpz), -1);
     assert_true(sea_turtle_integer_negate(&i));
     assert_int_equal(mpz_get_si(i.mpz), 1);
@@ -385,7 +419,7 @@ static void check_compare(void **state) {
     struct sea_turtle_integer i;
     assert_true(sea_turtle_integer_init(&i));
     struct sea_turtle_integer o;
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 1));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 1));
 
     assert_int_equal((-1), sea_turtle_integer_compare(&i, &o));
     assert_int_equal((-1), sea_turtle_integer_compare(&i, NULL));
@@ -409,7 +443,7 @@ static void check_hash(void **state) {
     srand(time(NULL));
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer object;
-    assert_true(sea_turtle_integer_init_with_uintmax_t(
+    assert_true(sea_turtle_integer_init_uintmax_t(
             &object, (1 + rand()) % (UINTMAX_MAX - 1)));
     uintmax_t code;
     assert_true(sea_turtle_integer_hash(&object, &code));
@@ -437,7 +471,7 @@ static void check_and(void **state) {
     struct sea_turtle_integer i = {};
     assert_true(sea_turtle_integer_init(&i));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 1));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 1));
 
     assert_true(sea_turtle_integer_and(&o, &o));
     assert_int_equal(mpz_get_si(o.mpz), 1);
@@ -472,7 +506,7 @@ static void check_or(void **state) {
     struct sea_turtle_integer i = {};
     assert_true(sea_turtle_integer_init(&i));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 1));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 1));
 
     assert_true(sea_turtle_integer_or(&o, &o));
     assert_int_equal(mpz_get_si(o.mpz), 1);
@@ -500,7 +534,7 @@ static void check_not_error_on_object_is_null(void **state) {
 static void check_not(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1));
     assert_true(sea_turtle_integer_not(&i));
     assert_int_equal(mpz_get_si(i.mpz), -2);
     assert_true(sea_turtle_integer_invalidate(&i));
@@ -526,7 +560,7 @@ static void check_xor(void **state) {
     struct sea_turtle_integer i = {};
     assert_true(sea_turtle_integer_init(&i));
     struct sea_turtle_integer o = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&o, 1));
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 1));
 
     assert_true(sea_turtle_integer_xor(&i, &o));
     assert_int_equal(mpz_get_si(i.mpz), 1);
@@ -548,12 +582,12 @@ static void check_shift_left_error_on_object_is_null(void **state) {
 static void check_shift_left(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1));
     assert_int_equal(1, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_shift_left(&i, 10));
     assert_int_equal(1024, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_invalidate(&i));
-    assert_true(sea_turtle_integer_init_with_intmax_t(&i, -1));
+    assert_true(sea_turtle_integer_init_intmax_t(&i, -1));
     assert_int_equal(-1, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_shift_left(&i, 10));
     assert_int_equal(-1024, mpz_get_si(i.mpz));
@@ -571,12 +605,12 @@ static void check_shift_right_error_on_object_is_null(void **state) {
 static void check_shift_right(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1024));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1024));
     assert_int_equal(1024, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_shift_right(&i, 10));
     assert_int_equal(1, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_invalidate(&i));
-    assert_true(sea_turtle_integer_init_with_intmax_t(&i, -1024));
+    assert_true(sea_turtle_integer_init_intmax_t(&i, -1024));
     assert_int_equal(-1024, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_shift_right(&i, 10));
     assert_int_equal(-1, mpz_get_si(i.mpz));
@@ -601,13 +635,13 @@ static void check_length_error_on_out_is_null(void **state) {
 static void check_length(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1024));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1024));
     assert_int_equal(1024, mpz_get_si(i.mpz));
     uintmax_t length;
     assert_true(sea_turtle_integer_length(&i, &length));
     assert_int_equal(11, length);
     assert_true(sea_turtle_integer_invalidate(&i));
-    assert_true(sea_turtle_integer_init_with_intmax_t(&i, -2048));
+    assert_true(sea_turtle_integer_init_intmax_t(&i, -2048));
     assert_int_equal(-2048, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_length(&i, &length));
     assert_int_equal(12, length);
@@ -632,13 +666,13 @@ static void check_count_error_on_out_is_null(void **state) {
 static void check_count(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1024));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1024));
     assert_int_equal(1024, mpz_get_si(i.mpz));
     uintmax_t count;
     assert_true(sea_turtle_integer_count(&i, &count));
     assert_int_equal(1, count);
     assert_true(sea_turtle_integer_invalidate(&i));
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 255));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 255));
     assert_int_equal(255, mpz_get_si(i.mpz));
     assert_true(sea_turtle_integer_count(&i, &count));
     assert_int_equal(8, count);
@@ -663,7 +697,7 @@ static void check_get_error_on_out_is_null(void **state) {
 static void check_get(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     struct sea_turtle_integer i = {};
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, 1025));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 1025));
     bool value;
     assert_true(sea_turtle_integer_get(&i, 0, &value));
     assert_true(value);
@@ -672,7 +706,7 @@ static void check_get(void **state) {
     assert_true(sea_turtle_integer_get(&i, 10, &value));
     assert_true(value);
     assert_true(sea_turtle_integer_invalidate(&i));
-    assert_true(sea_turtle_integer_init_with_uintmax_t(&i, -1025));
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, -1025));
     assert_true(sea_turtle_integer_get(&i, 1024, &value));
     assert_false(value);
     /* twos compliment representation for a negative number */
@@ -771,33 +805,37 @@ int main(int argc, char *argv[]) {
     const struct CMUnitTest tests[] = {
             cmocka_unit_test(check_invalidate_error_on_object_is_null),
             cmocka_unit_test(check_invalidate),
-            cmocka_unit_test(check_init_with_char_ptr_error_on_object_is_null),
-            cmocka_unit_test(check_init_with_char_ptr_error_on_char_ptr_is_null),
-            cmocka_unit_test(check_init_with_char_ptr_error_on_char_ptr_is_malformed),
-            cmocka_unit_test(check_init_with_char_ptr),
-            cmocka_unit_test(check_init_with_uintmax_t_error_on_object_is_null),
-            cmocka_unit_test(check_init_with_uintmax_t),
-            cmocka_unit_test(check_init_with_intmax_t_error_on_object_is_null),
-            cmocka_unit_test(check_init_with_intmax_t),
-            cmocka_unit_test(check_init_with_integer_error_on_object_is_null),
-            cmocka_unit_test(check_init_with_integer_error_on_other_is_null),
-            cmocka_unit_test(check_init_with_integer),
+            cmocka_unit_test(check_init_char_ptr_error_on_object_is_null),
+            cmocka_unit_test(check_init_char_ptr_error_on_char_ptr_is_null),
+            cmocka_unit_test(check_init_char_ptr_error_on_char_ptr_is_malformed),
+            cmocka_unit_test(check_init_char_ptr),
+            cmocka_unit_test(check_init_uintmax_t_error_on_object_is_null),
+            cmocka_unit_test(check_init_uintmax_t),
+            cmocka_unit_test(check_init_intmax_t_error_on_object_is_null),
+            cmocka_unit_test(check_init_intmax_t),
+            cmocka_unit_test(check_init_integer_error_on_object_is_null),
+            cmocka_unit_test(check_init_integer_error_on_other_is_null),
+            cmocka_unit_test(check_init_integer),
             cmocka_unit_test(check_init_error_on_object_is_null),
             cmocka_unit_test(check_init),
-            cmocka_unit_test(check_set_with_char_ptr_error_on_object_is_null),
-            cmocka_unit_test(check_set_with_char_ptr_error_on_char_ptr_is_null),
-            cmocka_unit_test(check_set_with_char_ptr_error_on_char_ptr_is_malformed),
-            cmocka_unit_test(check_set_with_char_ptr),
-            cmocka_unit_test(check_set_with_uintmax_t_error_on_object_is_null),
-            cmocka_unit_test(check_set_with_uintmax_t),
-            cmocka_unit_test(check_set_with_intmax_t_error_on_object_is_null),
-            cmocka_unit_test(check_set_with_intmax_t),
+            cmocka_unit_test(check_set_char_ptr_error_on_object_is_null),
+            cmocka_unit_test(check_set_char_ptr_error_on_char_ptr_is_null),
+            cmocka_unit_test(check_set_char_ptr_error_on_char_ptr_is_malformed),
+            cmocka_unit_test(check_set_char_ptr),
+            cmocka_unit_test(check_set_uintmax_t_error_on_object_is_null),
+            cmocka_unit_test(check_set_uintmax_t),
+            cmocka_unit_test(check_set_intmax_t_error_on_object_is_null),
+            cmocka_unit_test(check_set_intmax_t),
             cmocka_unit_test(check_add_error_on_object_is_null),
             cmocka_unit_test(check_add_error_on_other_is_null),
             cmocka_unit_test(check_add),
+            cmocka_unit_test(check_add_uintmax_t_error_on_object_is_null),
+            cmocka_unit_test(check_add_uintmax_t),
             cmocka_unit_test(check_subtract_error_on_object_is_null),
             cmocka_unit_test(check_subtract_error_on_other_is_null),
             cmocka_unit_test(check_subtract),
+            cmocka_unit_test(check_subtract_uintmax_t_error_on_object_is_null),
+            cmocka_unit_test(check_subtract_uintmax_t),
             cmocka_unit_test(check_divide_error_on_object_is_null),
             cmocka_unit_test(check_divide_error_on_divisor_is_null),
             cmocka_unit_test(check_divide_error_on_divide_by_zero),

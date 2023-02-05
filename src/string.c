@@ -9,7 +9,7 @@
 #include <test/cmocka.h>
 #endif
 
-bool sea_turtle_string_init_with_string(
+bool sea_turtle_string_init_string(
         struct sea_turtle_string *const object,
         const struct sea_turtle_string *const other) {
     if (!object) {

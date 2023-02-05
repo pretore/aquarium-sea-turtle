@@ -42,8 +42,8 @@ struct sea_turtle_integer_range {
  * @throws SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED if char_ptr is not in
  * one of the recognised formats.
  */
-bool sea_turtle_integer_init_with_char_ptr(struct sea_turtle_integer *object,
-                                           const char *char_ptr);
+bool sea_turtle_integer_init_char_ptr(struct sea_turtle_integer *object,
+                                      const char *char_ptr);
 
 /**
  * @brief Initialize integer from uintmax_t.
@@ -52,8 +52,8 @@ bool sea_turtle_integer_init_with_char_ptr(struct sea_turtle_integer *object,
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_init_with_uintmax_t(struct sea_turtle_integer *object,
-                                            uintptr_t value);
+bool sea_turtle_integer_init_uintmax_t(struct sea_turtle_integer *object,
+                                       uintmax_t value);
 
 /**
  * @brief Initialize integer from intmax_t.
@@ -62,8 +62,8 @@ bool sea_turtle_integer_init_with_uintmax_t(struct sea_turtle_integer *object,
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_init_with_intmax_t(struct sea_turtle_integer *object,
-                                           intmax_t value);
+bool sea_turtle_integer_init_intmax_t(struct sea_turtle_integer *object,
+                                      intmax_t value);
 
 /**
  * @brief Initialize integer from other integer.
@@ -73,9 +73,8 @@ bool sea_turtle_integer_init_with_intmax_t(struct sea_turtle_integer *object,
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
  */
-bool sea_turtle_integer_init_with_integer(
-        struct sea_turtle_integer *restrict object,
-        const struct sea_turtle_integer *restrict other);
+bool sea_turtle_integer_init_integer(struct sea_turtle_integer *object,
+                                     const struct sea_turtle_integer *other);
 
 /**
  * @brief Initialize integer.
@@ -113,8 +112,8 @@ bool sea_turtle_integer_invalidate(struct sea_turtle_integer *object);
  * @throws SEA_TURTLE_INTEGER_ERROR_CHAR_PTR_IS_MALFORMED if char_ptr is not in
  * one of the recognised formats.
  */
-bool sea_turtle_integer_set_with_char_ptr(struct sea_turtle_integer *object,
-                                          const char *char_ptr);
+bool sea_turtle_integer_set_char_ptr(struct sea_turtle_integer *object,
+                                     const char *char_ptr);
 
 /**
  * @brief Set the integer from uintmax_t.
@@ -123,8 +122,8 @@ bool sea_turtle_integer_set_with_char_ptr(struct sea_turtle_integer *object,
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_set_with_uintmax_t(struct sea_turtle_integer *object,
-                                           uintmax_t value);
+bool sea_turtle_integer_set_uintmax_t(struct sea_turtle_integer *object,
+                                      uintmax_t value);
 
 /**
  * @brief Set the integer from intmax_t.
@@ -133,8 +132,8 @@ bool sea_turtle_integer_set_with_uintmax_t(struct sea_turtle_integer *object,
  * @return On success true, otherwise false if an error has occurred.
  * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  */
-bool sea_turtle_integer_set_with_intmax_t(struct sea_turtle_integer *object,
-                                          intmax_t value);
+bool sea_turtle_integer_set_intmax_t(struct sea_turtle_integer *object,
+                                     intmax_t value);
 
 /**
  * @brief Add two integers together.
@@ -148,6 +147,16 @@ bool sea_turtle_integer_add(struct sea_turtle_integer *object,
                             const struct sea_turtle_integer *other);
 
 /**
+ * @brief Add value to integer.
+ * @param [in,out] object add value to this integer.
+ * @param [in] value to be added.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ */
+bool sea_turtle_integer_add_uintmax_t(struct sea_turtle_integer *object,
+                                      uintmax_t value);
+
+/**
  * @brief Subtract other integer from object.
  * @param [in,out] object integer from which other will be subtracted.
  * @param [in] other integer instance.
@@ -157,6 +166,16 @@ bool sea_turtle_integer_add(struct sea_turtle_integer *object,
  */
 bool sea_turtle_integer_subtract(struct sea_turtle_integer *object,
                                  const struct sea_turtle_integer *other);
+
+/**
+ * @brief Subtract value from object.
+ * @param [in,out] object integer from which value will be subtracted.
+ * @param [in] value integer instance.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ */
+bool sea_turtle_integer_subtract_uintmax_t(struct sea_turtle_integer *object,
+                                           uintmax_t value);
 
 /**
  * @brief Divide integer by divisor.

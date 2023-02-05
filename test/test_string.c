@@ -140,28 +140,28 @@ static void check_init(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_with_string_error_on_object_is_null(void **state) {
+static void check_init_string_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_string_init_with_string(NULL, (void *)1));
+    assert_false(sea_turtle_string_init_string(NULL, (void *)1));
     assert_int_equal(SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_with_string_error_no_other_is_null(void **state) {
+static void check_init_string_error_no_other_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
-    assert_false(sea_turtle_string_init_with_string((void *)1, NULL));
+    assert_false(sea_turtle_string_init_string((void *)1, NULL));
     assert_int_equal(SEA_TURTLE_STRING_ERROR_OTHER_IS_NULL, sea_turtle_error);
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
-static void check_with_string(void **state) {
+static void check_init_string(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     const char chars[] = u8"turtle 🐢!";
     struct sea_turtle_string other;
     size_t out;
     assert_true(sea_turtle_string_init(&other, chars, sizeof(chars), &out));
     struct sea_turtle_string object;
-    assert_true(sea_turtle_string_init_with_string(&object, &other));
+    assert_true(sea_turtle_string_init_string(&object, &other));
     assert_ptr_not_equal(other.data, object.data);
     assert_memory_equal(other.data, object.data, other.size);
     assert_int_equal(other.size, object.size);
@@ -570,9 +570,9 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_init_error_on_char_ptr_is_malformed),
             cmocka_unit_test(check_init_error_on_memory_allocation_failed),
             cmocka_unit_test(check_init),
-            cmocka_unit_test(check_with_string_error_on_object_is_null),
-            cmocka_unit_test(check_with_string_error_no_other_is_null),
-            cmocka_unit_test(check_with_string),
+            cmocka_unit_test(check_init_string_error_on_object_is_null),
+            cmocka_unit_test(check_init_string_error_no_other_is_null),
+            cmocka_unit_test(check_init_string),
             cmocka_unit_test(check_count_error_on_object_is_null),
             cmocka_unit_test(check_count_error_on_out_is_null),
             cmocka_unit_test(check_count),
