@@ -122,6 +122,21 @@ bool sea_turtle_integer_set_intmax_t(
     return true;
 }
 
+bool sea_turtle_integer_set_integer(
+        struct sea_turtle_integer *const object,
+        const struct sea_turtle_integer *const other) {
+    if (!object) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL;
+        return false;
+    }
+    if (!other) {
+        sea_turtle_error = SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL;
+        return false;
+    }
+    mpz_set(object->mpz, other->mpz);
+    return true;
+}
+
 bool sea_turtle_integer_add(struct sea_turtle_integer *const object,
                             const struct sea_turtle_integer *const other) {
     if (!object) {

@@ -208,6 +208,33 @@ static void check_set_intmax_t(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
 }
 
+static void check_set_integer_error_on_object_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_set_integer(NULL, (void *)1));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL, sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_integer_error_on_other_is_null(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    assert_false(sea_turtle_integer_set_integer((void *)1, NULL));
+    assert_int_equal(SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL, sea_turtle_error);
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
+static void check_set_integer(void **state) {
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+    struct sea_turtle_integer i = {};
+    assert_true(sea_turtle_integer_init_uintmax_t(&i, 98123));
+    struct sea_turtle_integer o = {};
+    assert_true(sea_turtle_integer_init_uintmax_t(&o, 47248));
+    assert_true(sea_turtle_integer_set_integer(&i, &o));
+    assert_int_equal(mpz_get_ui(i.mpz), 47248);
+    assert_true(sea_turtle_integer_invalidate(&o));
+    assert_true(sea_turtle_integer_invalidate(&i));
+    sea_turtle_error = SEA_TURTLE_ERROR_NONE;
+}
+
 static void check_add_error_on_object_is_null(void **state) {
     sea_turtle_error = SEA_TURTLE_ERROR_NONE;
     assert_false(sea_turtle_integer_add(NULL, (void *)1));
@@ -826,6 +853,9 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_set_uintmax_t),
             cmocka_unit_test(check_set_intmax_t_error_on_object_is_null),
             cmocka_unit_test(check_set_intmax_t),
+            cmocka_unit_test(check_set_integer_error_on_object_is_null),
+            cmocka_unit_test(check_set_integer_error_on_other_is_null),
+            cmocka_unit_test(check_set_integer),
             cmocka_unit_test(check_add_error_on_object_is_null),
             cmocka_unit_test(check_add_error_on_other_is_null),
             cmocka_unit_test(check_add),

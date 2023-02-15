@@ -136,6 +136,17 @@ bool sea_turtle_integer_set_intmax_t(struct sea_turtle_integer *object,
                                      intmax_t value);
 
 /**
+ * @brief Set the integer from other integer.
+ * @param [in] object instance to be set.
+ * @param [in] other integer whose value we will be set to.
+ * @return On success true, otherwise false if an error has occurred.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
+ * @throws SEA_TURTLE_INTEGER_ERROR_OTHER_IS_NULL if other is <i>NULL</i>.
+ */
+bool sea_turtle_integer_set_integer(struct sea_turtle_integer *object,
+                                    const struct sea_turtle_integer *other);
+
+/**
  * @brief Add two integers together.
  * @param [in,out] object add other to this integer.
  * @param [in] other integer instance.
