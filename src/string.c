@@ -352,8 +352,8 @@ int sea_turtle_string_next(const struct sea_turtle_string *const object,
         return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
     }
     return end <= *out
-        ? SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
-        : 0;
+           ? SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
+           : 0;
 }
 
 int sea_turtle_string_prev(const struct sea_turtle_string *const object,
@@ -382,13 +382,13 @@ int sea_turtle_string_prev(const struct sea_turtle_string *const object,
         return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
     }
     size_t i = 4;
-    for (; i && (**out & 0xC0) == 0x80; i--, *out -= 1);
+    for (; *out >= object->data && i && (**out & 0xC0) == 0x80; i--, *out -= 1);
     if (!i) {
         return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
     }
     return *out < object->data
-        ? SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
-        : 0;
+           ? SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
+           : 0;
 }
 
 int sea_turtle_string_code_point(const struct sea_turtle_string *const object,
