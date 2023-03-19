@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <sea-turtle/error.h>
 #include <sea-turtle/integer.h>
 #include <sea-turtle/string.h>
 

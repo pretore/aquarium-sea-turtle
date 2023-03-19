@@ -9,164 +9,145 @@
 #include <test/cmocka.h>
 #endif
 
-bool sea_turtle_string_init_string(
+int sea_turtle_string_init_string(
         struct sea_turtle_string *const object,
         const struct sea_turtle_string *const other) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!other) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OTHER_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OTHER_IS_NULL;
     }
     void *data = malloc(other->size);
     if (!data) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
     }
     *object = *other;
     memcpy(data, other->data, other->size);
     object->data = data;
-    return true;
+    return 0;
 }
 
-bool sea_turtle_string_init(struct sea_turtle_string *const object,
-                            const char *const char_ptr,
-                            const size_t size,
-                            size_t *const out) {
+int sea_turtle_string_init(struct sea_turtle_string *const object,
+                           const char *const char_ptr,
+                           const size_t size,
+                           size_t *const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!char_ptr) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_NULL;
     }
     if (!size) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_SIZE_IS_ZERO;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_SIZE_IS_ZERO;
     }
-    if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
-    }
+    int error;
     *object = (struct sea_turtle_string) {0};
-    if (!sea_turtle_string_is_utf8_sequence(
-            char_ptr, size, out, &object->count)) {
+    size_t count;
+    if ((error = sea_turtle_string_is_utf8_sequence(
+            char_ptr, size, &count, &object->count))) {
         seagrass_required_true(SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED
-                               == sea_turtle_error);
-        return false;
+                               == error);
+        return error;
     }
-    if (!*out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_EMPTY_CHAR_SEQUENCE;
-        return false;
+    if (!count) {
+        return SEA_TURTLE_STRING_ERROR_EMPTY_CHAR_SEQUENCE;
     }
     uintmax_t alloc;
     /* add 1 to accommodate the NULL termination char */
-    const bool result = seagrass_uintmax_t_add(1, *out, &alloc);
-    if (!result || alloc > SIZE_MAX) {
+    if ((error = seagrass_uintmax_t_add(1, count, &alloc))
+        || alloc > SIZE_MAX) {
         seagrass_required_true(
                 SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                == seagrass_error
-                || result);
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
-        return false;
+                == error || !error);
+        return SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
     }
-    if (!sea_turtle_string_set_size(object, alloc)) {
-        seagrass_required_true(SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED
-                               == sea_turtle_error);
-        return false;
+    if ((error = sea_turtle_string_set_size(object, alloc))) {
+        seagrass_required_true(
+                SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED
+                == error);
+        return error;
     }
-    memcpy(object->data, char_ptr, *out);
+    memcpy(object->data, char_ptr, count);
     /* calculate hashcode */
     const uint8_t *at;
-    seagrass_required_true(sea_turtle_string_first(object, &at));
+    seagrass_required_true(!sea_turtle_string_first(object, &at));
     do {
         uint32_t code_point;
-        seagrass_required_true(sea_turtle_string_code_point(
+        seagrass_required_true(!sea_turtle_string_code_point(
                 object, at, &code_point));
         object->hash = 31 * object->hash + code_point;
-    } while (sea_turtle_string_next(object, at, &at));
+    } while (!(error = sea_turtle_string_next(object, at, &at)));
     seagrass_required_true(SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
-                           == sea_turtle_error);
-    return true;
+                           == error);
+    if (out) {
+        *out = count;
+    }
+    return 0;
 }
 
-bool sea_turtle_string_invalidate(struct sea_turtle_string *const object) {
+int sea_turtle_string_invalidate(struct sea_turtle_string *const object) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     free(object->data);
     *object = (struct sea_turtle_string) {0};
-    return true;
+    return 0;
 }
 
-bool sea_turtle_string_is_utf8_sequence(const char *const char_ptr,
-                                        const size_t size,
-                                        size_t *const out,
-                                        uintmax_t *const count) {
+int sea_turtle_string_is_utf8_sequence(const char *const char_ptr,
+                                       const size_t size,
+                                       size_t *const out,
+                                       uintmax_t *const count) {
     if (!char_ptr) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_NULL;
     }
     if (!size) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_SIZE_IS_ZERO;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_SIZE_IS_ZERO;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     /* https://www.rfc-editor.org/rfc/rfc3629#section-4 */
-    bool result;
+    int error;
     uintmax_t i = 0, o = 0, c = 0;
     const uint8_t *byte = (const uint8_t *) char_ptr;
     while (byte[i] && i < size) {
-        seagrass_required_true(seagrass_uintmax_t_add(1, c, &c));
+        seagrass_required_true(!seagrass_uintmax_t_add(1, c, &c));
         /* UTF8-1 */
         if (byte[i] <= 0x7F) {
-            if (!(result = seagrass_uintmax_t_add(1, i, &i))
-                || i > size) {
+            if ((error = seagrass_uintmax_t_add(1, i, &i)) || i > size) {
                 seagrass_required_true(
                         SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                        == seagrass_error || result);
-                sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-                return false;
+                        == error || !error);
+                return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
             }
             continue;
         }
-        if (!(result = seagrass_uintmax_t_add(1, i, &o))
-            || o >= size) {
+        if ((error = seagrass_uintmax_t_add(1, i, &o)) || o >= size) {
             seagrass_required_true(
                     SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                    == seagrass_error || result);
-            sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-            return false;
+                    == error || !error);
+            return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
         }
         /* UTF8-2 */
         if (byte[i] >= 0xC2
             && byte[i] <= 0xDF
             && byte[1 + i] >= 0x80
             && byte[1 + i] <= 0xBF) {
-            if (!(result = seagrass_uintmax_t_add(2, i, &i))
-                || i > size) {
+            if ((error = seagrass_uintmax_t_add(2, i, &i)) || i > size) {
                 seagrass_required_true(
                         SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                        == seagrass_error || result);
-                sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-                return false;
+                        == error || !error);
+                return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
             }
             continue;
         }
-        if (!(result = seagrass_uintmax_t_add(2, i, &o))
-            || o >= size) {
+        if ((error = seagrass_uintmax_t_add(2, i, &o)) || o >= size) {
             seagrass_required_true(
                     SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                    == seagrass_error || result);
-            sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-            return false;
+                    == error || !error);
+            return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
         }
         /* UTF8-3 */
         if ((byte[i] == 0xE0
@@ -191,23 +172,19 @@ bool sea_turtle_string_is_utf8_sequence(const char *const char_ptr,
                 && byte[1 + i] <= 0xBF
                 && byte[2 + i] >= 0x80
                 && byte[2 + i] <= 0xBF)) {
-            if (!(result = seagrass_uintmax_t_add(3, i, &i))
-                || i > size) {
+            if ((error = seagrass_uintmax_t_add(3, i, &i)) || i > size) {
                 seagrass_required_true(
                         SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                        == seagrass_error || result);
-                sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-                return false;
+                        == error || !error);
+                return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
             }
             continue;
         }
-        if (!(result = seagrass_uintmax_t_add(3, i, &o))
-            || o >= size) {
+        if ((error = seagrass_uintmax_t_add(3, i, &o)) || o >= size) {
             seagrass_required_true(
                     SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                    == seagrass_error || result);
-            sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-            return false;
+                    == error || !error);
+            return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
         }
         /* UTF8-4 */
         if ((byte[i] == 0xF0
@@ -232,38 +209,33 @@ bool sea_turtle_string_is_utf8_sequence(const char *const char_ptr,
                 && byte[2 + i] <= 0xBF
                 && byte[3 + i] >= 0x80
                 && byte[3 + i] <= 0xBF)) {
-            if (!(result = seagrass_uintmax_t_add(4, i, &i))
-                || i > size) {
+            if ((error = seagrass_uintmax_t_add(4, i, &i)) || i > size) {
                 seagrass_required_true(
                         SEAGRASS_UINTMAX_T_ERROR_RESULT_IS_INCONSISTENT
-                        == seagrass_error || result);
-                sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-                return false;
+                        == error || !error);
+                return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
             }
             continue;
         }
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED;
     }
     if (count) {
         *count = c;
     }
     *out = i;
-    return true;
+    return 0;
 }
 
-bool sea_turtle_string_count(const struct sea_turtle_string *const object,
-                             uintmax_t *const out) {
+int sea_turtle_string_count(const struct sea_turtle_string *const object,
+                            uintmax_t *const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     *out = object->count;
-    return true;
+    return 0;
 }
 
 int sea_turtle_string_compare(const struct sea_turtle_string *const object,
@@ -288,100 +260,84 @@ int sea_turtle_string_compare(const struct sea_turtle_string *const object,
     return 0;
 }
 
-bool sea_turtle_string_hash(const struct sea_turtle_string *const object,
-                            uintmax_t *const out) {
+int sea_turtle_string_hash(const struct sea_turtle_string *const object,
+                           uintmax_t *const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
-    }
-    if (!object->hash) {
-
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     *out = object->hash;
     return true;
 }
 
-bool sea_turtle_string_set_size(struct sea_turtle_string *const object,
-                                const size_t size) {
+int sea_turtle_string_set_size(struct sea_turtle_string *const object,
+                               const size_t size) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     uintmax_t new;
-    seagrass_required_true(seagrass_uintmax_t_maximum(
+    seagrass_required_true(!seagrass_uintmax_t_maximum(
             1, size, &new));
     if (new > SIZE_MAX) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
     }
     if (new == object->size) {
-        return true;
+        return 0;
     }
     uint8_t *data = object->data
                     ? realloc(object->data, new)
                     : malloc(new);
     if (!data) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED;
     }
     data[new - 1] = 0;
     object->data = data;
     object->size = new;
-    return true;
+    return 0;
 }
 
-bool sea_turtle_string_first(const struct sea_turtle_string *const object,
-                             const uint8_t **const out) {
+int sea_turtle_string_first(const struct sea_turtle_string *const object,
+                            const uint8_t **const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     *out = object->data;
-    return true;
+    return 0;
 }
 
-bool sea_turtle_string_last(const struct sea_turtle_string *const object,
-                            const uint8_t **const out) {
+int sea_turtle_string_last(const struct sea_turtle_string *const object,
+                           const uint8_t **const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     const uint8_t *end = object->data + object->size - 1;
-    seagrass_required_true(sea_turtle_string_prev(object, end, out));
-    return true;
+    seagrass_required_true(!sea_turtle_string_prev(object, end, out));
+    return 0;
 }
 
-bool sea_turtle_string_next(const struct sea_turtle_string *const object,
-                            const uint8_t *const at,
-                            const uint8_t **const out) {
+int sea_turtle_string_next(const struct sea_turtle_string *const object,
+                           const uint8_t *const at,
+                           const uint8_t **const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!at) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_NULL;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     const uint8_t *const end = object->data + object->size - 1;
     if (at < object->data || end < at) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_OUT_OF_BOUNDS;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_OUT_OF_BOUNDS;
     }
     const uint8_t byte = *at;
     if ((byte & 0xF8) == 0xF0) {
@@ -393,35 +349,28 @@ bool sea_turtle_string_next(const struct sea_turtle_string *const object,
     } else if (!(byte & 0x80)) {
         *out = 1 + at;
     } else {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
     }
-    if (end <= *out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE;
-        return false;
-    }
-    return true;
+    return end <= *out
+        ? SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
+        : 0;
 }
 
-bool sea_turtle_string_prev(const struct sea_turtle_string *const object,
-                            const uint8_t *const at,
-                            const uint8_t **const out) {
+int sea_turtle_string_prev(const struct sea_turtle_string *const object,
+                           const uint8_t *const at,
+                           const uint8_t **const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!at) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_NULL;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     const uint8_t *const end = object->data + object->size - 1;
     if (at < object->data || end < at) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_OUT_OF_BOUNDS;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_OUT_OF_BOUNDS;
     }
     const uint8_t byte = *at;
     if (((byte & 0xF8) == 0xF0)
@@ -430,41 +379,33 @@ bool sea_turtle_string_prev(const struct sea_turtle_string *const object,
         || !(byte & 0x80)) {
         *out = at - 1;
     } else {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
     }
     size_t i = 4;
     for (; i && (**out & 0xC0) == 0x80; i--, *out -= 1);
     if (!i) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
     }
-    if (*out < object->data) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE;
-        return false;
-    }
-    return true;
+    return *out < object->data
+        ? SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
+        : 0;
 }
 
-bool sea_turtle_string_code_point(const struct sea_turtle_string *const object,
-                                  const uint8_t *const at,
-                                  uint32_t *const out) {
+int sea_turtle_string_code_point(const struct sea_turtle_string *const object,
+                                 const uint8_t *const at,
+                                 uint32_t *const out) {
     if (!object) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL;
     }
     if (!at) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_NULL;
     }
     if (!out) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
     const uint8_t *const end = object->data + object->size - 1;
     if (at < object->data || end < at) {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_OUT_OF_BOUNDS;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_OUT_OF_BOUNDS;
     }
     uintmax_t i;
     uint8_t byte = *at;
@@ -481,18 +422,16 @@ bool sea_turtle_string_code_point(const struct sea_turtle_string *const object,
         i = 0;
         *out = byte & 0x7F;
     } else {
-        sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
-        return false;
+        return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
     }
     for (uintmax_t o = 0; o < i; o++) {
         byte = *(1 + o + at);
         if ((byte & 0xC0) != 0x80) {
-            sea_turtle_error = SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
-            return false;
+            return SEA_TURTLE_STRING_ERROR_AT_IS_INVALID;
         }
         *out <<= 6;
         *out |= byte & 0x3F;
     }
-    return true;
+    return 0;
 }
 

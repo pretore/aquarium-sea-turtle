@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(aquarium-sea-turtle VERSION 3.1.0
+project(aquarium-sea-turtle VERSION 4.0.0
         LANGUAGES C
         DESCRIPTION "Data types in C")
 
@@ -15,18 +15,17 @@ find_package(Doxygen OPTIONAL_COMPONENTS dot mscgen dia)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     include(cmake/FetchAquariumCMocka.cmake)
 endif ()
+include(cmake/FetchAquariumSeaUrchin.cmake)
 include(cmake/FetchAquariumSeagrass.cmake)
 
 # Sources
 set(EXPORTED_HEADER_FILES
-        include/sea-turtle/error.h
         include/sea-turtle/integer.h
         include/sea-turtle/string.h
         include/sea-turtle.h)
 set(SOURCES
         ${EXPORTED_HEADER_FILES}
         src/private/string.h
-        src/error.c
         src/integer.c
         src/sea-turtle.c
         src/string.c)
@@ -49,6 +48,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
                 ${CMAKE_THREAD_LIBS_INIT}
                 GMP::GMP
                 aquarium-cmocka
+                aquarium-sea-urchin
                 aquarium-seagrass)
     target_include_directories(${PROJECT_NAME}
             PUBLIC
@@ -97,6 +97,7 @@ else ()
             PUBLIC
                 ${CMAKE_THREAD_LIBS_INIT}
                 GMP::GMP
+                aquarium-sea-urchin
                 aquarium-seagrass)
     set_target_properties(${PROJECT_NAME}
             PROPERTIES
