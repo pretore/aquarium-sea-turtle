@@ -46,12 +46,13 @@ int sea_turtle_string_init(struct sea_turtle_string *const object,
     size_t count;
     if ((error = sea_turtle_string_is_utf8_sequence(
             char_ptr, size, &count, &object->count))) {
-        seagrass_required_true(SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED
-                               == error);
+        seagrass_required_true(
+                SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED
+                == error);
         return error;
     }
     if (!count) {
-        return SEA_TURTLE_STRING_ERROR_EMPTY_CHAR_SEQUENCE;
+        return 0;
     }
     uintmax_t alloc;
     /* add 1 to accommodate the NULL termination char */
@@ -78,8 +79,9 @@ int sea_turtle_string_init(struct sea_turtle_string *const object,
                 object, at, &code_point));
         object->hash = 31 * object->hash + code_point;
     } while (!(error = sea_turtle_string_next(object, at, &at)));
-    seagrass_required_true(SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
-                           == error);
+    seagrass_required_true(
+            SEA_TURTLE_STRING_ERROR_END_OF_SEQUENCE
+            == error);
     if (out) {
         *out = count;
     }
@@ -306,6 +308,9 @@ int sea_turtle_string_first(const struct sea_turtle_string *const object,
     if (!out) {
         return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
     }
+    if (!object->count) {
+        return SEA_TURTLE_STRING_ERROR_STRING_IS_EMPTY;
+    }
     *out = object->data;
     return 0;
 }
@@ -317,6 +322,9 @@ int sea_turtle_string_last(const struct sea_turtle_string *const object,
     }
     if (!out) {
         return SEA_TURTLE_STRING_ERROR_OUT_IS_NULL;
+    }
+    if (!object->count) {
+        return SEA_TURTLE_STRING_ERROR_STRING_IS_EMPTY;
     }
     const uint8_t *end = object->data + object->size - 1;
     seagrass_required_true(!sea_turtle_string_prev(object, end, out));

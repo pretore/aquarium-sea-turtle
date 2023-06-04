@@ -18,7 +18,7 @@
     SEA_URCHIN_ERROR_VALUE_IS_ZERO
 #define SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED \
     SEA_URCHIN_ERROR_VALUE_IS_INVALID
-#define SEA_TURTLE_STRING_ERROR_EMPTY_CHAR_SEQUENCE \
+#define SEA_TURTLE_STRING_ERROR_STRING_IS_EMPTY \
     SEA_URCHIN_ERROR_IS_EMPTY
 #define SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED \
     SEA_URCHIN_ERROR_MEMORY_ALLOCATION_FAILED
@@ -66,8 +66,6 @@ int sea_turtle_string_init_string(struct sea_turtle_string *object,
  * @throws SEA_TURTLE_STRING_ERROR_SIZE_IS_ZERO is size is zero.
  * @throws SEA_TURTLE_STRING_ERROR_CHAR_PTR_IS_MALFORMED if char_ptr does not
  * refer to a valid UTF-8 sequence.
- * @throws SEA_TURTLE_STRING_ERROR_EMPTY_CHAR_SEQUENCE if only an empty char
- * sequence was found.
  * @throws SEA_TURTLE_STRING_ERROR_MEMORY_ALLOCATION_FAILED if there is
  * insufficient memory to initialize the string instance.
  */
@@ -129,6 +127,7 @@ int sea_turtle_string_hash(const struct sea_turtle_string *object,
  * @return On success <i>0</i>, otherwise an error code.
  * @throws SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  * @throws SEA_TURTLE_STRING_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
+ * @throws SEA_TURTLE_STRING_ERROR_STRING_IS_EMPTY if string is empty.
  */
 int sea_turtle_string_first(const struct sea_turtle_string *object,
                             const uint8_t **out);
@@ -141,6 +140,7 @@ int sea_turtle_string_first(const struct sea_turtle_string *object,
  * @return On success <i>0</i>, otherwise an error code.
  * @throws SEA_TURTLE_STRING_ERROR_OBJECT_IS_NULL if object is <i>NULL</i>.
  * @throws SEA_TURTLE_STRING_ERROR_OUT_IS_NULL if out is <i>NULL</i>.
+ * @throws SEA_TURTLE_STRING_ERROR_STRING_IS_EMPTY if string is empty.
  */
 int sea_turtle_string_last(const struct sea_turtle_string *object,
                            const uint8_t **out);

@@ -43,17 +43,6 @@ static void check_init_error_on_size_is_zero(void **state) {
                      SEA_TURTLE_STRING_ERROR_SIZE_IS_ZERO);
 }
 
-static void check_init_error_on_empty_char_sequence(void **state) {
-    const char input[] = u8"";
-    struct sea_turtle_string object;
-    size_t out;
-    assert_int_equal(sea_turtle_string_init(&object,
-                                            input,
-                                            sizeof(input),
-                                            &out),
-                     SEA_TURTLE_STRING_ERROR_EMPTY_CHAR_SEQUENCE);
-}
-
 static void check_init_error_on_char_ptr_is_malformed(void **state) {
     const char input0[] = {(char)0xC0, (char)0x80};
     struct sea_turtle_string object;
@@ -104,6 +93,20 @@ static void check_init(void **state) {
     assert_memory_equal(object.data, chars, sizeof(chars));
     assert_int_equal(object.size, sizeof(chars));
     assert_int_equal(object.count, 13);
+    assert_int_equal(sea_turtle_string_invalidate(&object), 0);
+}
+
+static void check_init_empty_char_sequence(void **state) {
+    const char chars[] = u8"";
+    struct sea_turtle_string object;
+    size_t out;
+    assert_int_equal(sea_turtle_string_init(&object,
+                                            chars,
+                                            sizeof(chars),
+                                            &out), 0);
+    assert_null(object.data);
+    assert_int_equal(object.size, 0);
+    assert_int_equal(object.count, 0);
     assert_int_equal(sea_turtle_string_invalidate(&object), 0);
 }
 
@@ -237,6 +240,14 @@ static void check_first(void **state) {
     assert_int_equal(sea_turtle_string_invalidate(&object), 0);
 }
 
+static void check_first_error_on_string_is_empty(void **state) {
+    struct sea_turtle_string object = {};
+    const uint8_t *at;
+    assert_int_equal(sea_turtle_string_first(&object, &at),
+                     SEA_TURTLE_STRING_ERROR_STRING_IS_EMPTY);
+    assert_int_equal(sea_turtle_string_invalidate(&object), 0);
+}
+
 static void check_last_error_on_object_is_null(void **state) {
     assert_int_equal(
             sea_turtle_string_last(NULL, (void *) 1),
@@ -268,6 +279,14 @@ static void check_last(void **state) {
                                             &out), 0);
     assert_int_equal(sea_turtle_string_last(&object, &at), 0);
     assert_ptr_equal(object.data + out - 1, at);
+    assert_int_equal(sea_turtle_string_invalidate(&object), 0);
+}
+
+static void check_last_error_on_string_is_empty(void **state) {
+    struct sea_turtle_string object = {};
+    const uint8_t *at;
+    assert_int_equal(sea_turtle_string_last(&object, &at),
+                     SEA_TURTLE_STRING_ERROR_STRING_IS_EMPTY);
     assert_int_equal(sea_turtle_string_invalidate(&object), 0);
 }
 
@@ -499,10 +518,10 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_init_error_on_object_is_null),
             cmocka_unit_test(check_init_error_on_char_ptr_is_null),
             cmocka_unit_test(check_init_error_on_size_is_zero),
-            cmocka_unit_test(check_init_error_on_empty_char_sequence),
             cmocka_unit_test(check_init_error_on_char_ptr_is_malformed),
             cmocka_unit_test(check_init_error_on_memory_allocation_failed),
             cmocka_unit_test(check_init),
+            cmocka_unit_test(check_init_empty_char_sequence),
             cmocka_unit_test(check_init_string_error_on_object_is_null),
             cmocka_unit_test(check_init_string_error_no_other_is_null),
             cmocka_unit_test(check_init_string),
@@ -514,9 +533,11 @@ int main(int argc, char *argv[]) {
             cmocka_unit_test(check_first_error_on_object_is_null),
             cmocka_unit_test(check_first_error_on_out_is_null),
             cmocka_unit_test(check_first),
+            cmocka_unit_test(check_first_error_on_string_is_empty),
             cmocka_unit_test(check_last_error_on_object_is_null),
             cmocka_unit_test(check_last_error_on_out_is_null),
             cmocka_unit_test(check_last),
+            cmocka_unit_test(check_last_error_on_string_is_empty),
             cmocka_unit_test(check_next_error_on_object_is_null),
             cmocka_unit_test(check_next_error_on_at_is_null),
             cmocka_unit_test(check_next_error_on_out_is_null),

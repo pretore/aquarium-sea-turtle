@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(aquarium-sea-turtle VERSION 4.0.1
+project(aquarium-sea-turtle VERSION 4.1.0
         LANGUAGES C
         DESCRIPTION "Data types in C")
 
